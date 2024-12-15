@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework', # rest framework
     'api.apps.ApiConfig', # api application
-    'rest_framework.authtoken', # token authontication
+    'accounts.apps.AccountsConfig', # accounts application
+    'posts.apps.PostsConfig', # posts application
+    'rest_framework.authtoken', # token authentication
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+
+# Update settings to use the custom user model
+AUTH_USER_MODEL = "accounts.User" # use the custom user model instead of the default 
