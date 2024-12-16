@@ -1,0 +1,84 @@
+# TestUser Token : 9b803f64cd3c3391a91792d757b1463ea47ad05b
+# admin Token : 28102bf038281aa00d234e944f9b53679bc3345f	
+
+# Create Post
+POST http://127.0.0.1:8000/api/posts/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"title":"how to django", "content":"this is a post sample", "image_url":""}
+
+### 
+# delete post by self
+DELETE http://127.0.0.1:8000/api/posts/6/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+
+### 
+# delete posts by admin
+DELETE http://127.0.0.1:8000/api/posts/5/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+# get post details by self 
+GET http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+#Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+###
+
+# get post details by admin 
+GET http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+###
+# get post list details by admin 
+GET http://127.0.0.1:8000/api/posts/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+
+# Test to update post title by the user themselves (specific user)
+PATCH http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"title": "User Updated title"}
+
+###
+
+#  Test to update content by admin
+PATCH http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{"content": "content updated by admin"}
+
+###
+# update all serialized fields by admin
+PUT http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{  "title": "Updated title with PUT","content": "content updated by admin with put","image_url":"https://google.com"}
+
+###
+# update all serialized fields by user
+PUT http://127.0.0.1:8000/api/posts/9/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{  "title": "Updated title with PUT","content": "content updated by user with put","image_url":"https://facebook.com"}
+
+###

@@ -1,14 +1,14 @@
 # **1. Models and Serializers**
 from django.contrib.auth import get_user_model
+from posts.models import Post, Comment, Like
 from rest_framework import serializers
 
 # **2. Tokens and password hasshing**
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 
-
+# user serializer class that handles all CRUD operations
 class UserSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(
         write_only=True,  # Password is write-only to prevent it from being included in the response
         required=True,
@@ -42,7 +42,14 @@ class UserSerializer(serializers.ModelSerializer):
             # Manually hash the password using make_password
             validated_data['password'] = make_password(password)
         # Pass the updated validated data to the parent class to update other fields
-        instance = super().update(user, validated_data)
+        user = super().update(user, validated_data)
         # If the password was updated, save the request
         user.save()
-        return instance
+        return user
+
+# post serializer class that handles all CRUD operations
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = "__all__"
+        read_only_fields = ['author', 'created_at']
