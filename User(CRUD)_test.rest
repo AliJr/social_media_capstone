@@ -1,0 +1,81 @@
+# TestUser Token : 8ef93d29d9c477d350525230dced9e2330cacf65
+# admin Token : 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+# Create user
+POST http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
+{"username":"TestUser", "email":"test@test.com", "password":"Passowrd@123"}
+
+### 
+# delete user by self
+DELETE http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 8ef93d29d9c477d350525230dced9e2330cacf65
+
+{}
+
+### 
+# delete user by admin
+DELETE http://127.0.0.1:8000/api/users/12/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{}
+
+###
+# get user details by self 
+GET http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 8ef93d29d9c477d350525230dced9e2330cacf65
+
+{}
+###
+
+# get user details by admin 
+GET http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{}
+###
+# get user list details by admin 
+GET http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{}
+
+###
+
+# Test to update user Password by the user themselves (specific user)
+PATCH http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 8ef93d29d9c477d350525230dced9e2330cacf65
+
+{"password": "NewPassword@123"}
+
+###
+
+#  Test to update username by admin
+PATCH http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{"username": "testUser"}
+
+###
+# update all serialized fields by admin
+PUT http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{"username": "AdminUpdatedUser","email": "adminupdated@test.com","password": "AdminNewPassword@123"}
+
+###
+# update all serialized fields by user
+PUT http://127.0.0.1:8000/api/users/13/
+Content-Type: application/json
+Authorization: Token 74c6721103547bf869ab311f21044d9c65e9e1ba
+
+{"username": "poorTester","email": "poorTester@test.com","password": "Password@123"}
