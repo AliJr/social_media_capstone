@@ -1,4 +1,5 @@
 # **1. Models and Serializers**
+import re
 from django.contrib.auth import get_user_model
 from posts.models import Post, Comment, Like
 from rest_framework import serializers
@@ -53,3 +54,25 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = "__all__"
         read_only_fields = ['author', 'created_at']
+        
+# Comment Serializer class that handle all CRUD operations
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.PrimaryKeyRelatedField(read_only = True)
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        read_only_fields = ['author', 'created_at']
+        
+    # overriding update to remove post from validated data before saving
+    def update(self, instance, validated_data):
+        validated_data.pop('post', None)
+        return super().update(instance, validated_data)
+        
+
+# Like Serializer class that handle all CRUD operations
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = "__all__"
+        read_only_fields = ['user', 'post']

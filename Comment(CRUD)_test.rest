@@ -1,0 +1,104 @@
+# TestUser Token : 9b803f64cd3c3391a91792d757b1463ea47ad05b
+# TestUser1 Token : 6695a889acd953be3e0a17f27c11bdf958bc0435	
+# admin Token : 28102bf038281aa00d234e944f9b53679bc3345f	
+
+# Create Comment
+POST http://127.0.0.1:8000/api/comments/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"content":"Nice comment", "post":"9"}
+
+### 
+# delete comment by self
+DELETE http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json
+Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
+
+{}
+
+### 
+# delete comments by admin
+DELETE http://127.0.0.1:8000/api/comments/5/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+# get comment details by anyone (no Auth) 
+GET http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+#Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+###
+
+# get comment details by admin 
+GET http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+###
+# get comment list details by admin 
+GET http://127.0.0.1:8000/api/comments/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+
+# Test to update author title by the user themselves (specific user)
+# should not change because field is read only
+PATCH http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
+
+{"author": "8"}
+
+###
+# Test to update post by the any user
+# should fail no permission
+PATCH http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"post": "10"}
+
+
+#########
+# Test to update content by the any user
+# should fail no permission
+PATCH http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"content": "Normal user updated the content"}
+###
+
+#  Test to update content by admin
+PATCH http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{"content": "content updated by admin"}
+
+###
+# update all serialized fields by admin
+PUT http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{  "id": "5","content": "content updated by admin with put","author":"1","post":"9"}
+
+###
+# update all serialized fields by user
+PUT http://127.0.0.1:8000/api/comments/3/
+Content-Type: application/json
+Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
+
+{  "id": "5","content": "content updated by user with put","author":"1","post":"9"}
+
+###
