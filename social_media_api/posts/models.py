@@ -11,6 +11,7 @@ class Post(models.Model):
     image_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.title
 
@@ -22,17 +23,8 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"Comment by {self.author.username} on {self.post.title}"
 
 
-# Like class with author and post foreign keys
-class Like(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
-    class Meta:
-        # ensure that a user can only like a post once
-        unique_together = ["user", "post"]
-    def __str__(self):
-        return f"Like by {self.user.username} on {self.post.title}"

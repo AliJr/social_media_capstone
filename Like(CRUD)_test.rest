@@ -1,0 +1,127 @@
+# TestUser Token : 9b803f64cd3c3391a91792d757b1463ea47ad05b
+# TestUser1 Token : 6695a889acd953be3e0a17f27c11bdf958bc0435	
+# admin Token : 28102bf038281aa00d234e944f9b53679bc3345f	
+# === POST (Create Like) ===
+
+# Test 1: Create a Post Like by TestUser
+# TestUser likes a post with ID 10.
+POST http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"like_type":"post", "post":"10", "comment":""}
+
+###
+
+# Test 2: Create a Comment Like by TestUser
+# TestUser likes a comment with ID 7.
+POST http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"like_type":"comment", "post":"", "comment":"7"}
+
+###
+
+# Test 3: Create Like for Both Post and Comment (Invalid Case)
+# TestUser tries to like both a post and a comment in the same request, which should fail.
+POST http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"like_type":"post", "post":"10", "comment":"7"}
+
+###
+
+# Test 4: Create Duplicate Like for a Post (Invalid Case)
+# TestUser tries to like the same post twice, which should fail.
+POST http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"like_type":"post", "post":"10", "comment":""}
+
+### 
+
+# Reattempt to like the same comment
+POST http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{"like_type":"comment", "post":"", "comment":"7"}
+
+###
+
+# === DELETE (Delete Like) ===
+
+# Test 5: Delete Like by TestUser
+# TestUser tries to delete their own like (ID 27).
+DELETE http://127.0.0.1:8000/api/likes/27/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+
+###
+
+# Test 6: Delete Like by Admin
+# Admin deletes a like with ID 29, regardless of ownership.
+DELETE http://127.0.0.1:8000/api/likes/29/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+
+# Test 7: User Tries to Delete Another User's Like (Invalid Case)
+# TestUser1 tries to delete a like created by TestUser.
+DELETE http://127.0.0.1:8000/api/likes/30/
+Content-Type: application/json
+Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
+
+{}
+
+###
+
+# === GET (Get Like Details) ===
+
+# Test 8: Get Like Details by TestUser
+# TestUser retrieves details for like with ID 30.
+GET http://127.0.0.1:8000/api/likes/30/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+
+###
+
+# Test 9: Get Like Details by Admin
+# Admin retrieves details for like with ID 30.
+GET http://127.0.0.1:8000/api/likes/30/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###
+
+# Test 10: Get All Likes by TestUser
+# TestUser retrieves all of their likes.
+GET http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+
+{}
+
+###
+
+# Test 11: Admin Retrieves All Likes
+# Admin retrieves all likes in the system.
+GET http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+
+{}
+
+###

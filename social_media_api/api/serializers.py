@@ -1,12 +1,14 @@
 # **1. Models and Serializers**
 import re
 from django.contrib.auth import get_user_model
-from posts.models import Post, Comment, Like
+from posts.models import Post, Comment
+from accounts.models import Like, Follow
 from rest_framework import serializers
 
 # **2. Tokens and password hasshing**
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
+
 
 # user serializer class that handles all CRUD operations
 class UserSerializer(serializers.ModelSerializer):
@@ -34,45 +36,54 @@ class UserSerializer(serializers.ModelSerializer):
 
         # Return the user along with the token
         return user, token
-    
+
     def update(self, user, validated_data):
         # Check if password is provided in the update request
-        password = validated_data.get('password', None)
+        password = validated_data.get("password", None)
         # If password is provided, hash it before saving
         if password:
             # Manually hash the password using make_password
-            validated_data['password'] = make_password(password)
+            validated_data["password"] = make_password(password)
         # Pass the updated validated data to the parent class to update other fields
         user = super().update(user, validated_data)
         # If the password was updated, save the request
         user.save()
         return user
 
+
 # post serializer class that handles all CRUD operations
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
-        read_only_fields = ['author', 'created_at']
-        
+        read_only_fields = ["author", "created_at"]
+
+
 # Comment Serializer class that handle all CRUD operations
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(read_only = True)
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+
     class Meta:
         model = Comment
         fields = "__all__"
-        read_only_fields = ['author', 'created_at']
-        
+        read_only_fields = ["author", "created_at"]
+
     # overriding update to remove post from validated data before saving
     def update(self, instance, validated_data):
-        validated_data.pop('post', None)
+        validated_data.pop("post", None)
         return super().update(instance, validated_data)
-        
+
 
 # Like Serializer class that handle all CRUD operations
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = "__all__"
-        read_only_fields = ['user', 'post']
+        read_only_fields = ["user", "created_at"]
+        
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ["followers", "followees", "created_at"]
