@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #path('posts/', include('posts.urls')),  # Routes to 'posts' app at /posts/
     path('api/', include('api.urls')),  # Routes to 'api' app at /api/
+    path('', include('core.urls')),  # Routes to 'api' app at /api/
 ]
 

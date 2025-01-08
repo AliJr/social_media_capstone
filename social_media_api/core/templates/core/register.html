@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Register | Social App{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center">Create an Account</h2>
+                <form id="registerForm" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-block">Register</button>
+                </form>
+                <div id="error-message" class="text-danger mt-3" style="display:none;"></div>
+                <div id="success-message" class="text-success mt-3" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form from submitting normally
+
+            console.log('Form submitted');  // Debugging: Check if this log appears
+
+            // Get form data
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            // Client-side validation
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            // Retrieve CSRF token
+            const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfTokenElement) {
+                console.error("CSRF token not found!");
+                return; // Exit the function if the CSRF token is missing
+            }
+
+            const csrfToken = csrfTokenElement.value;
+
+            // Prepare the data to send to the API
+            const data = {
+                username: username,
+                email: email,
+                password: password
+            };
+
+            // Debugging: Check the data being sent
+            console.log('Data to send:', data);
+
+            // Send the data to the API via fetch
+            fetch('/api/users/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // CSRF token for security
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response data:', data);  // Debugging: Check the API response
+
+                if (data.id) {  // Assuming the API returns an 'id' for the new user
+                    document.getElementById('success-message').textContent = 'Registration successful!';
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('registerForm').reset();  // Reset the form after success
+                } else {
+                    document.getElementById('error-message').textContent = data.error || 'Something went wrong, please try again.';
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
+                document.getElementById('error-message').style.display = 'block';
+            });
+        });
+    </script>
+{% endblock %}

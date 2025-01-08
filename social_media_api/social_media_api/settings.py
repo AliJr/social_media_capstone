@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",  # accounts application
     "posts.apps.PostsConfig",  # posts application
     "userProfile.apps.UserprofileConfig",  # userProfile application 
+    "core.apps.CoreConfig",  # core application
     "rest_framework.authtoken",  # token authentication
 ]
 
@@ -122,7 +123,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "core/static/"
+
+# The location where static files are stored during development
+STATICFILES_DIRS = [
+    BASE_DIR / "core/static",  # Path to your core app's static directory
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

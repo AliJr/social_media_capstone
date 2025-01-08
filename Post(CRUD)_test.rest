@@ -40,10 +40,10 @@ Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
 
 {}
 ###
-# get post list details by admin 
+# get post list details [ feed]
 GET http://127.0.0.1:8000/api/posts/
 Content-Type: application/json
-Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+#Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
 
 {}
 

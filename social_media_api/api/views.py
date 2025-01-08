@@ -60,6 +60,7 @@ class UserViewSet(ModelViewSet):
 
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
+    ordering = ["-created_at"]
     serializer_class = PostSerializer
     permission_classes = [PostPermission]
     filterset_fields = ["author", "title", "content"]
@@ -89,6 +90,7 @@ class CommentViewSet(ModelViewSet):
             notification_type="comment",
             comment=comment,
         )
+        
 
 
 # Like ViewSet

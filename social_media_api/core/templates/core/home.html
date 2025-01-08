@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home - Social App{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <!-- Sidebar with user info -->
+    <div class="col-md-3">
+        <div class="card">
+            <img src="{{ user.profile.picture.url }}" class="card-img-top" alt="Profile Picture">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                <p class="card-text">
+                    <strong>Followers:</strong> {{ user.followers.count }}<br>
+                    <strong>Following:</strong> {{ user.following.count }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main feed -->
+    <div class="col-md-6">
+        <div class="post-box">
+            <textarea class="form-control" rows="3" placeholder="What's on your mind?"></textarea>
+            <button class="btn btn-primary mt-3">Post</button>
+        </div>
+
+        <!-- Display Posts -->
+        {% for post in posts %}
+        <div class="post mt-4">
+            <div class="d-flex align-items-center">
+                <img src="{{ post.author.profile.picture.url }}" class="rounded-circle" width="40" height="40" alt="Profile Picture">
+                <h6 class="ms-2">{{ post.author.username }}</h6>
+            </div>
+            <p>{{ post.content }}</p>
+            <div class="d-flex justify-content-between">
+                <span>{{ post.likes.count }} likes</span>
+                <span>{{ post.comments.count }} comments</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5>Trending</h5>
+                <ul>
+                    {% for trend in trends %}
+                    <li><a href="#">{{ trend }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

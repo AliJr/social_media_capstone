@@ -1,0 +1,118 @@
+/* General Dark Mode Styling */
+html, body {
+    height: 100%;  /* Ensure the body takes full height of the viewport */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Use flexbox for the entire page */
+    flex-direction: column; /* Stack content vertically */
+}
+
+body {
+    background-color: #181818; /* Instagram-like dark background */
+    color: #fff; /* White text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Smooth font */
+}
+
+/* Main Content Area */
+main {
+    flex: 1; /* This will allow the main content to take up all available space */
+}
+
+/* Navbar Styling */
+.navbar-dark .navbar-nav .nav-link {
+    color: #f5a623; /* Instagram yellow for navbar links */
+    font-weight: bold;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffbb33; /* Lighter yellow on hover */
+}
+
+.navbar-brand {
+    color: #f5a623; /* Instagram yellow for the brand */
+    font-weight: bold;
+}
+
+/* Form Fields Styling */
+input.form-control, 
+textarea.form-control, 
+select.form-control {
+    background-color: #1d1d1d !important; /* Darker black background for inputs */
+    color: #fff !important; /* White text */
+    border: 1px solid #444 !important; /* Dim yellow border (dark border color) */
+    border-radius: 50px !important; /* Round edges */
+    box-shadow: none !important; /* Remove default shadow */
+    padding: 10px; /* Ensuring padding for comfort */
+    font-size: 1rem; /* Make sure font size is uniform */
+}
+
+/* Focus State for Inputs */
+input.form-control:focus, 
+textarea.form-control:focus, 
+select.form-control:focus {
+    border-color: #f5a623 !important; /* Dim yellow border on focus */
+    background-color: #333 !important; /* Slightly lighter background */
+    color: #fff !important; /* White text */
+    outline: none !important; /* Remove blue outline on focus */
+}
+
+/* Buttons Styling */
+.btn {
+    background-color: #f5a623; /* Yellow background for buttons */
+    border-color: #f5a623; /* Matching border */
+    color: #fff; /* White text */
+    border-radius: 50px; /* Round edges for buttons */
+    padding: 10px 25px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #ffbb33; /* Lighter yellow on hover */
+    border-color: #ffbb33;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #181818; /* Dark footer */
+    color: #888; /* Light gray footer text */
+    text-align: center;
+    width: 100%; /* Make the footer span the entire width of the page */
+    height: min-content;
+    position: absolute; /* Ensure the footer stays at the bottom */
+    bottom: 0;
+}
+
+/* Links Styling */
+a {
+    color: #f5a623; /* Instagram yellow for links */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffbb33; /* Lighter yellow on hover */
+}
+
+/* Container for Login Page */
+.login-container {
+    max-width: 400px;
+    margin: auto;
+}
+
+/* Card Styling for Login */
+.card {
+    background-color: #181818; /* Dark card background */
+    border: none;
+    border-radius: 10px; /* Round edges */
+    color: #fff;
+    padding: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Custom Styling for the Logo */
+.navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
