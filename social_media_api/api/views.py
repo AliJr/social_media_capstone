@@ -9,15 +9,16 @@ from .serializers import (
     PostSerializer,
     CommentSerializer,
     LikeSerializer,
-    FollowSerializer
+    FollowSerializer,
+    NotificationSerializer,
 )
 from django.contrib.auth import get_user_model
 from posts.models import Post, Comment
-from accounts.models import Like, Follow
+from userProfile.models import Like, Follow, Notification
 from rest_framework.serializers import ValidationError
 
 # **3. ViewSets, views and mixins**
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
 from rest_framework.mixins import (
     CreateModelMixin,
     DestroyModelMixin,
@@ -79,8 +80,15 @@ class CommentViewSet(ModelViewSet):
     ordering_fields = ["created_at"]
 
     def perform_create(self, serializer):
-        # Set the author to the current user when creating a comment
-        serializer.save(author=self.request.user)
+        # Create the comment first
+        comment = serializer.save(author=self.request.user)
+
+        # Create a notification for the post author
+        Notification.objects.create(
+            user=comment.post.author,  # The post author receives the notification
+            notification_type="comment",
+            comment=comment,
+        )
 
 
 # Like ViewSet
@@ -127,8 +135,20 @@ class LikeViewSet(
             if Like.objects.filter(user=self.request.user, comment=comment_id).exists():
                 raise ValidationError("You have already liked this comment.")
 
-        # If everything is valid, create the like
-        serializer.save(user=self.request.user)
+        # Save the like object
+        like = serializer.save(user=self.request.user)
+
+        # Create a notification for the author of the post or comment
+        if like.like_type == "post":
+            post_author = like.post.author
+            notification = Notification.objects.create(
+                user=post_author, notification_type="like", like=like
+            )
+        elif like.like_type == "comment":
+            comment_author = like.comment.author
+            notification = Notification.objects.create(
+                user=comment_author, notification_type="like", like=like
+            )
 
     def destroy(self, request, *args, **kwargs):
         """
@@ -162,6 +182,50 @@ class LikeViewSet(
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
 class FollowViewSet(ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
+
+    def perform_create(self, serializer):
+        follow = serializer.save()
+
+        # Create a notification for the user being followed
+        Notification.objects.create(
+            user=follow.followees,  # The user being followed receives the notification
+            notification_type="follow",
+            follow=follow,
+        )
+
+
+class NotificationViewSet(ViewSet):
+
+    def list(self, request):
+        """
+        List all notifications for the authenticated user.
+        """
+        notifications = Notification.objects.filter(user=request.user).order_by(
+            "-created_at"
+        )
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        """
+        Retrieve a single notification by its ID.
+        """
+        try:
+            notification = Notification.objects.get(id=pk, user=request.user)
+            serializer = NotificationSerializer(notification)
+            return Response(serializer.data)
+        except Notification.DoesNotExist:
+            return Response({"error": "Notification not found."}, status=404)
+
+    @action(detail=False, methods=["post"], url_path="mark-all-read")
+    def mark_all_as_read(self, request):
+        """
+        Mark all notifications as read for the authenticated user.
+        """
+        notifications = Notification.objects.filter(user=request.user, is_read=False)
+        notifications.update(is_read=True)
+        return Response({"message": "All notifications marked as read."})

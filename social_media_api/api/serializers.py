@@ -2,7 +2,7 @@
 import re
 from django.contrib.auth import get_user_model
 from posts.models import Post, Comment
-from accounts.models import Like, Follow
+from userProfile.models import Like, Follow, Notification
 from rest_framework import serializers
 
 # **2. Tokens and password hasshing**
@@ -87,3 +87,32 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = ["followers", "followees", "created_at"]
+        
+        
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'notification_type', 'created_at', 'is_read', 'like', 'follow', 'comment']
+
+    # Optionally, we can add more custom fields or methods to format related data
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Add related object details like the user who created the like, follow, or comment
+        if instance.like:
+            representation['like_details'] = {
+                'post': instance.like.post.title if instance.like.post else None,
+                'comment': instance.like.comment.content if instance.like.comment else None,
+                'user': instance.like.user.username,
+            }
+        elif instance.follow:
+            representation['follow_details'] = {
+                'follower': instance.follow.followers.username,
+                'followee': instance.follow.followees.username,
+            }
+        elif instance.comment:
+            representation['comment_details'] = {
+                'post': instance.comment.post.title,
+                'author': instance.comment.author.username,
+                'content': instance.comment.content,
+            }
+        return representation

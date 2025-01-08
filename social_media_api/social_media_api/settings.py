@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",  # api application
     "accounts.apps.AccountsConfig",  # accounts application
     "posts.apps.PostsConfig",  # posts application
+    "userProfile.apps.UserprofileConfig",  # userProfile application 
     "rest_framework.authtoken",  # token authentication
 ]
 
@@ -143,6 +144,8 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
         "rest_framework.filters.SearchFilter",
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # The number of items per page
 }
 
 
