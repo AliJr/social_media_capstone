@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser  
 
 
-
 # Custom user model extending the built in user model from Django
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False, null=False) # mandatory field when creating user: (unique), cant be empty in forms or database

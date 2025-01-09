@@ -24,24 +24,22 @@ class Like(models.Model):
     def __str__(self):
         return f"Like by {self.user.username} on {self.like_type} {self.post or self.comment}"
 
+
 # Follow model to link build following system
 class Follow(models.Model):
-    followers = models.ForeignKey(get_user_model(),related_name='follower', on_delete=models.CASCADE, db_index=True) #The user who is following
-    followees = models.ForeignKey(get_user_model(),related_name='followee', on_delete=models.CASCADE, db_index=True) #The user being followed.
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        # Ensure the follower-followee pair is unique
-        unique_together = ('followers', 'followees')
-        
-        ordering = ["-created_at"]
-        
+    follower = models.ForeignKey(
+        get_user_model(), related_name='followers', on_delete=models.CASCADE, db_index=True
+    )  # The user who is following
+    following = models.ForeignKey(
+        get_user_model(), related_name='following', on_delete=models.CASCADE, db_index=True
+    )  # The user being followed
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of when the follow relationship was created
+
     def __str__(self):
-        return f"{self.followers.username} follows {self.followees.username}"
-    
-    
-from django.db import models
-from django.contrib.auth import get_user_model
+        return f'{self.follower.username} follows {self.following.username}'
+
+    class Meta:
+        unique_together = ('follower', 'following')  # Ensure a user can only follow another user once
 
 # Notification model to track likes, follows, and comments
 class Notification(models.Model):

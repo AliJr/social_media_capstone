@@ -1,15 +1,15 @@
-# TestUser Token : 9b803f64cd3c3391a91792d757b1463ea47ad05b
-# TestUser1 Token : 6695a889acd953be3e0a17f27c11bdf958bc0435	
-# admin Token : 28102bf038281aa00d234e944f9b53679bc3345f	
+# TestUser Token : 4b167d854fb9577405caf997a68ea34767eaa6ff
+# TestUser1 Token : 4a225ba57e6672179c3e9c2e2c1e722d8da8221c	
+# admin Token : 750b3bcfab29f403a07ae4ac13dd50cdeed3080c	
 # === POST (Create Like) ===
 
 # Test 1: Create a Post Like by TestUser
 # TestUser likes a post with ID 10.
 POST http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
-{"like_type":"post", "post":"10", "comment":""}
+{"like_type":"post", "post":"1", "comment":""}
 
 ###
 
@@ -17,7 +17,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # TestUser likes a comment with ID 7.
 POST http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {"like_type":"comment", "post":"", "comment":"7"}
 
@@ -27,7 +27,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # TestUser tries to like both a post and a comment in the same request, which should fail.
 POST http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {"like_type":"post", "post":"10", "comment":"7"}
 
@@ -37,7 +37,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # TestUser tries to like the same post twice, which should fail.
 POST http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {"like_type":"post", "post":"10", "comment":""}
 
@@ -46,7 +46,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # Reattempt to like the same comment
 POST http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {"like_type":"comment", "post":"", "comment":"7"}
 
@@ -58,7 +58,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # TestUser tries to delete their own like (ID 27).
 DELETE http://127.0.0.1:8000/api/likes/27/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {}
 
@@ -68,7 +68,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # Admin deletes a like with ID 29, regardless of ownership.
 DELETE http://127.0.0.1:8000/api/likes/29/
 Content-Type: application/json
-Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+Authorization: Token 750b3bcfab29f403a07ae4ac13dd50cdeed3080c
 
 {}
 
@@ -78,7 +78,7 @@ Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
 # TestUser1 tries to delete a like created by TestUser.
 DELETE http://127.0.0.1:8000/api/likes/30/
 Content-Type: application/json
-Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
+Authorization: Token 4a225ba57e6672179c3e9c2e2c1e722d8da8221c
 
 {}
 
@@ -90,7 +90,7 @@ Authorization: Token 6695a889acd953be3e0a17f27c11bdf958bc0435
 # TestUser retrieves details for like with ID 30.
 GET http://127.0.0.1:8000/api/likes/30/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {}
 
@@ -100,7 +100,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # Admin retrieves details for like with ID 30.
 GET http://127.0.0.1:8000/api/likes/30/
 Content-Type: application/json
-Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+Authorization: Token 750b3bcfab29f403a07ae4ac13dd50cdeed3080c
 
 {}
 
@@ -110,7 +110,7 @@ Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
 # TestUser retrieves all of their likes.
 GET http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
+Authorization: Token 4b167d854fb9577405caf997a68ea34767eaa6ff
 
 {}
 
@@ -120,7 +120,7 @@ Authorization: Token 9b803f64cd3c3391a91792d757b1463ea47ad05b
 # Admin retrieves all likes in the system.
 GET http://127.0.0.1:8000/api/likes/
 Content-Type: application/json
-Authorization: Token 28102bf038281aa00d234e944f9b53679bc3345f
+Authorization: Token 750b3bcfab29f403a07ae4ac13dd50cdeed3080c
 
 {}
 

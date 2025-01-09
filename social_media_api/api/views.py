@@ -2,6 +2,9 @@
 from .permissions import UserPermission, PostPermission
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.contrib.auth import authenticate, login
+
 
 # **2. Models and Serializers**
 from .serializers import (
@@ -56,8 +59,7 @@ class UserViewSet(ModelViewSet):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+        
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     ordering = ["-created_at"]
@@ -90,8 +92,6 @@ class CommentViewSet(ModelViewSet):
             notification_type="comment",
             comment=comment,
         )
-        
-
 
 # Like ViewSet
 class LikeViewSet(
@@ -185,19 +185,54 @@ class LikeViewSet(
         return Response(serializer.data)
 
 
-class FollowViewSet(ModelViewSet):
+# ViewSet for Follow model
+class FollowViewSet(
+    GenericViewSet,
+    ListModelMixin,
+    CreateModelMixin,
+    DestroyModelMixin,
+    RetrieveModelMixin,
+):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Follow.objects.filter(follower=user)
 
     def perform_create(self, serializer):
-        follow = serializer.save()
+        follower = (
+            self.request.user
+        )  # Automatically use the authenticated user as the follower
+        following = serializer.validated_data["following"]
 
-        # Create a notification for the user being followed
-        Notification.objects.create(
-            user=follow.followees,  # The user being followed receives the notification
-            notification_type="follow",
-            follow=follow,
-        )
+        # Ensure the user is not following themselves
+        if follower == following:
+            raise ValidationError("You cannot follow yourself.")
+
+        # Ensure the user is not following on behalf of others
+        if follower != self.request.user:
+            raise ValidationError("You cannot follow on behalf of another user.")
+
+        # Ensure the follow relationship does not already exist
+        if Follow.objects.filter(follower=follower, following=following).exists():
+            raise ValidationError("You are already following this user.")
+
+        # Create the follow relationship
+        follow=serializer.save(follower=follower)
+
+        # Create a notification for the followed user
+        notification = Notification.objects.create(
+            user=following, notification_type="follow", follow=follow)
+
+
+    def perform_destroy(self, instance):
+        # Ensure the user can only unfollow themselves
+        if instance.follower != self.request.user:
+            raise ValidationError("You can only unfollow yourself.")
+        instance.delete()
+        return Response(status=204)
 
 
 class NotificationViewSet(ViewSet):

@@ -86,7 +86,8 @@ class LikeSerializer(serializers.ModelSerializer):
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
-        fields = ["followers", "followees", "created_at"]
+        fields = ['id', 'following', 'created_at']
+        read_only_fields = ['follower','created_at']
         
         
 class NotificationSerializer(serializers.ModelSerializer):
